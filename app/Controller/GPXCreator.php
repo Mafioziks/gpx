@@ -21,8 +21,11 @@ class GPXCreator extends \XMLReader {
         $this->xml($content);
 
         while ($this->next()) {
+            // Create recursive
             echo "READ: " . $this->name . " | " . $this->nodeType . " | " . \XMLReader::ELEMENT . "</br>";
-            if ($this->name == "gpx" && $this->nodeType == \XMLReader::ELEMENT) {}
+            if ($this->name == "gpx" && $this->nodeType == \XMLReader::ELEMENT) {
+                $this->get
+            }
 
             if ($this->name == "trk" && $this->nodeType == \XMLReader::ELEMENT) {
                 $gpx->addTrack("trk");
