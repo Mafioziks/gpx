@@ -20,7 +20,11 @@ class Gpx {
 
     public function toString() {
         return "<" . $this->tag . " " . $this->xmlns . ">".
-            $this->tracks[0] .
+            count($this->tracks) .
             "</" . $this->tag . ">";
+    }
+
+    public function addChildren($children) {
+        $this->tracks[] = $children;
     }
 }

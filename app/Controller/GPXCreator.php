@@ -12,27 +12,44 @@ class GPXCreator extends \XMLReader {
 
     public function fromContent($content) {
 
-        $gpx = new Gpx();
-
-        if ($content == "") {
-            return $gpx;
-        }
+        $elements = [];
 
         $this->xml($content);
 
         while ($this->next()) {
-            // Create recursive
             echo "READ: " . $this->name . " | " . $this->nodeType . " | " . \XMLReader::ELEMENT . "</br>";
-            if ($this->name == "gpx" && $this->nodeType == \XMLReader::ELEMENT) {
-                $this->get
-            }
+            if ($this->nodeType == \XMLReader::ELEMENT) {
+                if ($this->name == "gpx") {
+                    $gpx = new Gpx();
+                    $elements[] = $gpx;
 
-            if ($this->name == "trk" && $this->nodeType == \XMLReader::ELEMENT) {
-                $gpx->addTrack("trk");
-            } 
+                    if ($this->readInnerXML() != "") {
+                        $gpxCreator = new GPXCreator();
+                        $gpx->addChildren($gpxCreator->fromContent($this->readInnerXML()));
+                    }
+                }
+
+                if ($this->name == "trk") {
+                    $track = new Track();
+                    $elements[] = $track;
+                    
+                    if ($this->readInnerXML() != "") {
+                        $gpxCreator = new GPXCreator();
+                        $track->addChildren($gpxCreator->fromContent($this->readInnerXML()));
+                    }
+                } 
+            }
         }
 
-        return $gpx;
+        if (count($elements) == 0) {
+            return null;
+        }
+
+        if (count($elements) == 1) {
+            return $elements[0];
+        }
+
+        return $elements;
     }
 
 }
